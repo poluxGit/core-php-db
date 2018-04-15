@@ -111,8 +111,8 @@ class CoreModelGenerator
         $this->timestampLastGen = $ltsCurrentDate;
         $lStrGenDate = date('Ymmd-H:i',$ltsCurrentDate);
         $lStrGenDateForFileName = date('Ymmd-Hi',$ltsCurrentDate);
-        $lStrFileName = $lStrGenDateForFileName."_".$targetSchema."_".$version.".sql";
-        $lStrCompletefilepath = dirname($outputDirectory).'/'.$lStrFileName;
+        $lStrFileName = $lStrGenDateForFileName."_".$this->targetSchema."_".$this->targetVersion.".sql";
+        $lStrCompletefilepath = dir($outputDirectory)->path.'/'.$lStrFileName;
         file_put_contents($lStrCompletefilepath, $this->generateSQLScript($ltsCurrentDate));
         
         return $lStrCompletefilepath;

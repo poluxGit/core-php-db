@@ -1,0 +1,25 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"polux\\CorePHPDb\\" : "src"
+		}
+	},
+	"repositories" : [{
+		"url" : "https://github.com/poluxGit/core-php.git",
+		"type" : "vcs"
+			
+		}
+	],
+	"name" : "polux/core-php-db",
+	"type" : "project",
+	"config" : {
+		"disable-tls" : true,
+		"secure-http" : false
+	},
+	"require" : {
+		"php" : ">=7.1",
+		"smarty/smarty" : "~3.1",
+		"polux/core-php" : "master"
+	},
+	"minimum-stability" : "dev"
+}

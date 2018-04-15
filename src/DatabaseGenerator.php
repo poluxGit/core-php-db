@@ -32,6 +32,7 @@ class DatabaseGenerator
     /**
      * Déploiement du schéma de base de données Core Model généré à la volée
      * 
+     * @internal php core-db-generator.php gendb core COREDEVXX dev3 'mysql:host=coredbdev_01;port=3306;dbname=COREDEV01' polux polux
      * @param \PDO $dbHandler
      */
     public function deployCoreModelToDatabase(\PDO $dbHandler,string $schema)

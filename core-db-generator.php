@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 
 use polux\CorePHPDb\Generators\CoreModelGenerator;
+use polux\CorePHPDb\DatabaseGenerator;
 
 
 function main($argc,$argv)
@@ -54,7 +55,7 @@ function main($argc,$argv)
         {
             throw new \Exception(
                 sprintf(
-                    "Nombre de paramètres invalid pour l'action '%s' => %d (Min:%d|Max:%d).\n",
+                    "Nombre de parametres invalid pour l'action '%s' => %d (Min:%d|Max:%d).\n",
                     $action,
                     $argc-1,
                     $lArrActions[$action][0]-1,
@@ -63,7 +64,7 @@ function main($argc,$argv)
                 );
         }       
         
-        // Action 'list'.
+        // Action 'list'
         if(strtolower($action) == 'list')
         {
             echo "Liste des actions : \n";            
@@ -71,20 +72,139 @@ function main($argc,$argv)
             {
                 echo sprintf("- %s : %s. Usage : php core-db-generator.php %s\n",$lStrAction ,$lArrActionParam[3],$lArrActionParam[2]);
             }
+            
+            exit(0);
         }
+        
+        // Action 'genout'
+        if(strtolower($action) == 'genout')
+        {
+            $type = array_shift($argv);
+            
+            if($type !== "core" && $type !== "business" )
+            {
+                throw new \Exception(
+                    sprintf(
+                        "Action '%s' - Type de generation invalide => '%s' (Valeurs acceptees : core|business).\n",
+                        $action,
+                        $type
+                        )
+                    );
+            }
+            
+            // Generation core
+            if($type == "core")
+            {
+                $targteSchema = array_shift($argv);
+                $targteVersion = array_shift($argv);
+                $lObjGen = new CoreModelGenerator($targteSchema,$targteVersion);
+                echo $lObjGen->generateSQLScript();
+            }
+
+            // Generation Business
+            if($type == "business")
+            {
+                // TODO To Develop
+//                 $targteSchema = array_shift($argv);
+//                 $targteVersion = array_shift($argv);
+//                 $lObjGen = new CoreModelGenerator($targteSchema,$targteVersion);
+//                 echo $lObjGen->generateSQLScript();
+            }            
+            
+            exit(0);
+        }
+        
+        // Action 'genfile'
+        if(strtolower($action) == 'genfile')
+        {
+            $type = array_shift($argv);
+            
+            if($type !== "core" && $type !== "business" )
+            {
+                throw new \Exception(
+                    sprintf(
+                        "Action '%s' - Type de generation invalide => '%s' (Valeurs acceptées : core|business).\n",
+                        $action,
+                        $type
+                        )
+                    );
+            }
+            
+            // Generation core
+            if($type == "core")
+            {
+                $targteSchema      = array_shift($argv);
+                $targteVersion     = array_shift($argv);
+                $lSTargetDirecotry = array_shift($argv);
+                $lObjGen = new CoreModelGenerator($targteSchema,$targteVersion);
+                echo sprintf("Fichier genere : %s",$lObjGen->generateSQLScriptToFile($lSTargetDirecotry));
+            }
+            
+            // Generation Business
+            if($type == "business")
+            {
+                // TODO To Develop
+                //                 $targteSchema = array_shift($argv);
+                //                 $targteVersion = array_shift($argv);
+                //                 $lObjGen = new CoreModelGenerator($targteSchema,$targteVersion);
+                //                 echo $lObjGen->generateSQLScript();
+            }
+            
+            
+            exit(0);
+        }
+        
+        // Action 'genfile'
+        if(strtolower($action) == 'gendb')
+        {
+            $type = array_shift($argv);
+            
+            if($type !== "core" && $type !== "business" )
+            {
+                throw new \Exception(
+                    sprintf(
+                        "Action '%s' - Type de generation invalide => '%s' (Valeurs acceptées : core|business).\n",
+                        $action,
+                        $type
+                        )
+                    );
+            }
+            
+            // Generation core
+            if($type == "core")
+            {
+                $targteSchema      = array_shift($argv);
+                $targteVersion     = array_shift($argv);
+                $db_dsn = array_shift($argv);
+                $db_login = array_shift($argv);
+                $db_password = array_shift($argv);
+                
+                $lObjDB = new \PDO($db_dsn,$db_login,$db_password);
+                $lObjGen = new DatabaseGenerator();
+                $lObjGen->deployCoreModelToDatabase($lObjDB,$targteSchema);
+            }
+            
+            // Generation Business
+            if($type == "business")
+            {
+                // TODO To Develop
+                //                 $targteSchema = array_shift($argv);
+                //                 $targteVersion = array_shift($argv);
+                //                 $lObjGen = new CoreModelGenerator($targteSchema,$targteVersion);
+                //                 echo $lObjGen->generateSQLScript();
+            }
+            
+            
+            exit(0);
+        }
+        
         
     }
     catch(\Exception $ex)
     {
         echo $ex->getMessage();
         echo sprintf("Usage : php core-db-generator.php %s",$lArrActions[$action][2]);
-    }
-    
-    
-   // $lObjGen = new CoreModelGenerator('COREDEV02');
-    
-    //echo $lObjGen->generateSQLScript();
-    
+    }    
 }
 
 main($argc,$argv);
